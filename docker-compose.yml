@@ -13,11 +13,8 @@ services:
       - .env
     restart: always
     networks:
-      - app-network
-      - npm_network  # Add this to join NPM's network
+      - npm_network  # Only use npm_network
 
 networks:
-  app-network:
-    driver: bridge
   npm_network:
     external: true  # This tells Docker this network is defined elsewhere
