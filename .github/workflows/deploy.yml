@@ -1,0 +1,40 @@
+name: Deploy Next.js to VPS
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Deploy to VPS
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.VPS_HOST }}
+        username: ${{ secrets.VPS_USER }}
+        key: ${{ secrets.VPS_DEPLOY_KEY }}
+        envs: NEXT_PUBLIC_GOOGLE_CLIENT_ID,NEXT_PUBLIC_BACKEND_API_URL
+        script: |
+          cd ${{ secrets.APP_PATH }}
+          
+          # Pull kode terbaru
+          git pull origin main
+          
+          # Buat .env file dari GitHub Secrets
+          echo 'NEXT_PUBLIC_GOOGLE_CLIENT_ID="${{ secrets.NEXT_PUBLIC_GOOGLE_CLIENT_ID }}"' > .env
+          echo 'NEXT_PUBLIC_BACKEND_API_URL="${{ secrets.NEXT_PUBLIC_BACKEND_API_URL }}"' >> .env
+          
+          # Build dan restart containers
+          docker-compose down
+          docker-compose build --no-cache frontend
+          docker-compose up -d
+          
+          # Tampilkan status
+          docker ps
+          echo "Deployment completed successfully!"
