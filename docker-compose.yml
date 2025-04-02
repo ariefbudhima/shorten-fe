@@ -1,5 +1,4 @@
-# docker-compose.yml
-version: '3'
+version: '3.8'
 
 services:
   shortener-frontend:
@@ -8,13 +7,14 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "4100:3000"  # Keep your current port mapping
+      - "4100:3000"
     env_file:
       - .env
     restart: always
     networks:
-      - npm_network  # Only use npm_network
+      - npm_network
 
 networks:
   npm_network:
-    external: true  # This tells Docker this network is defined elsewhere
+    name: npm_network  # Explicitly define the network name
+    external: true
