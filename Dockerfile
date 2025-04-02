@@ -23,6 +23,9 @@ WORKDIR /app
 
 # Set environment ke production
 ENV NODE_ENV=production
+# Bind to all interfaces - add these two lines
+ENV PORT=3000
+ENV HOSTNAME="0.0.0.0"
 
 # Copy package files
 COPY package*.json ./
@@ -39,4 +42,5 @@ COPY --from=builder /app/next.config.js ./
 EXPOSE 3000
 
 # Command untuk menjalankan aplikasi
-CMD ["npm", "start"]
+# Modify this to explicitly set the host
+CMD ["npm", "start", "--", "-H", "0.0.0.0"]

@@ -2,18 +2,22 @@
 version: '3'
 
 services:
-  frontend:
+  shortener-frontend:
+    container_name: shortener-frontend
     build:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "4100:3000"
+      - "4100:3000"  # Keep your current port mapping
     env_file:
       - .env
     restart: always
     networks:
       - app-network
+      - npm_network  # Add this to join NPM's network
 
 networks:
   app-network:
     driver: bridge
+  npm_network:
+    external: true  # This tells Docker this network is defined elsewhere
