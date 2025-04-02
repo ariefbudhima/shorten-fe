@@ -16,5 +16,5 @@ services:
 
 networks:
   npm_network:
-    name: npm_network  # Explicitly define the network name
     external: true
+    name: npm_network
