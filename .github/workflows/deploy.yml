@@ -32,8 +32,8 @@ jobs:
           
           # Build dan restart containers
           docker-compose down
-          docker-compose build --no-cache frontend
-          docker-compose up -d --force-recreate frontend
+          docker-compose build --no-cache shortener-frontend
+          docker-compose up -d --force-recreate shortener-frontend
           
           # Tampilkan status
           docker ps
