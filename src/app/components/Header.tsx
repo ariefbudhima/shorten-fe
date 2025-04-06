@@ -20,9 +20,9 @@ export default function Header() {
         URL Shortener
       </div>
       
-      <a 
-        href="/login" 
-        className="px-4 py-2 bg-violet-600 hover:bg-violet-500 text-white rounded-lg transition-all duration-200 text-sm font-medium flex items-center shadow-md hover:shadow-lg"
+      <button 
+        disabled
+        className="px-4 py-2 bg-gray-500 text-gray-300 rounded-lg text-sm font-medium flex items-center shadow-md cursor-not-allowed opacity-50"
       >
         <svg 
           xmlns="http://www.w3.org/2000/svg" 
@@ -39,7 +39,7 @@ export default function Header() {
           />
         </svg>
         Sign In
-      </a>
+      </button>
     </header>
   );
 }

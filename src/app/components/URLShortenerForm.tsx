@@ -14,9 +14,20 @@ export default function URLShortenerForm() {
   // Backend API endpoint
   const API_ENDPOINT = process.env.NEXT_PUBLIC_BACKEND_API_URL + "/shorten";
 
+  const isValidUrl = (urlString: string) => {
+    const pattern = /^(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/;
+    return pattern.test(urlString);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!url) return;
+
+    // Validasi URL
+    if (!isValidUrl(url)) {
+      setError("Please enter a valid URL (e.g., example.com or https://example.com)");
+      return;
+    }
     
     setIsLoading(true);
     setError("");

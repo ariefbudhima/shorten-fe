@@ -1,19 +1,22 @@
 # Tahap build
 FROM node:23-alpine AS builder
 
-# Set working directory
 WORKDIR /app
 
-# Copy package files
+# Salin package files
 COPY package*.json ./
 
-# Install dependencies
+# Install semua dependency
 RUN npm ci
 
-# Copy source code
+# Salin semua source code
 COPY . .
 
-# Build aplikasi
+# Set ENV supaya build log verbose
+ENV NODE_OPTIONS="--trace-warnings"
+ENV DEBUG="next:*,middleware:*"
+
+# Build aplikasi Next.js
 RUN npm run build
 
 # Tahap production
@@ -21,26 +24,23 @@ FROM node:23-alpine AS runner
 
 WORKDIR /app
 
-# Set environment ke production
+# Set environment variables
 ENV NODE_ENV=production
-# Bind to all interfaces - add these two lines
 ENV PORT=3000
-ENV HOSTNAME="0.0.0.0"
+ENV HOSTNAME=0.0.0.0
+ENV DEBUG=next:*,middleware:*
 
-# Copy package files
+# Salin hanya dependencies yang dibutuhkan
 COPY package*.json ./
-
-# Install dependencies production saja
 RUN npm ci --omit=dev
 
-# Copy hasil build dari tahap builder
+# Salin hasil build dari stage sebelumnya
 COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/public ./public
-COPY --from=builder /app/next.config.ts ./
+COPY --from=builder /app/next.config.* ./
 
-# Expose port
+# Expose port aplikasi
 EXPOSE 3000
 
-# Command untuk menjalankan aplikasi
-# Modify this to explicitly set the host
-CMD ["npm", "start", "--", "-H", "0.0.0.0"]
+# Jalankan server Next.js dengan log middleware aktif
+CMD ["sh", "-c", "NODE_OPTIONS='--trace-warnings' npm start"]
